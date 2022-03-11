@@ -7,9 +7,8 @@ namespace PhotoShot
     {
         public static void Main(string[] args)
         {
-            BitmapImage v = new BitmapImage("coco");
-            v.ConsoleWriteImage();
-            Console.ReadKey();
+            BitmapImage v = new BitmapImage("coco","myedit");
+            v.MirrorImage();
         }
         
         
