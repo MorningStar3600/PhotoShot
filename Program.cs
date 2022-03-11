@@ -1,4 +1,6 @@
-﻿namespace PhotoShot
+﻿using System.Drawing;
+
+namespace PhotoShot
 {
     internal static class Program
     {
