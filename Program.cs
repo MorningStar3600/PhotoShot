@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace PhotoShot
 {
@@ -6,6 +7,12 @@ namespace PhotoShot
     {
         public static void Main(string[] args)
         {
+            BitmapImage v = new BitmapImage("coco");
+            v.ConsoleWriteImage();
+            Console.ReadKey();
         }
+        
+        
+        
     }
 }
