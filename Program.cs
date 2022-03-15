@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
+using PhotoShot.AdvancedConsole;
+using Image = PhotoShot.AdvancedConsole.Image;
 
 namespace PhotoShot
 {
@@ -7,11 +10,16 @@ namespace PhotoShot
     {
         public static void Main(string[] args)
         {
-            BitmapImage v = new BitmapImage("coco","myedit");
-            v.MirrorImage();
+            ConsoleManager.SetFullScreen();
+            BitmapImage v = new BitmapImage("coco","jjj");
+
+            v.WhiteAndBlackImage();
+
+            Image img = new Image("../../Images/images/coco.bmp");
+            
+            Console.Write(img);
+            
+            Console.ReadKey();
         }
-        
-        
-        
     }
 }

@@ -43,6 +43,23 @@ namespace PhotoShot
             result.SaveImage();
             return result;
         }
+
+        public BitmapImage WhiteAndBlackImage()
+        {
+            var result = new BitmapImage(Source, DestininationName);
+            for (var i = 0; i < BitmapImageBySource.Height; i++)
+            {
+                for (var j = 0; j < BitmapImageBySource.Width; j++)
+                {
+                    int value = (BitmapImageBySource.GetPixel(j, i).R+ BitmapImageBySource.GetPixel(j, i).G + BitmapImageBySource.GetPixel(j, i).B)/3;
+                    Color clr = Color.FromArgb(value, value, value);
+                    result.BitmapImageBySource.SetPixel(j,i,clr);
+                }
+            }
+            
+            result.SaveImage();
+            return result;
+        }
         
     }
 }

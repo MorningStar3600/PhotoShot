@@ -41,7 +41,12 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="AdvancedConsole\ColorHandler.cs" />
+        <Compile Include="AdvancedConsole\ConsoleManager.cs" />
+        <Compile Include="AdvancedConsole\FastConsole.cs" />
         <Compile Include="BitmapImage.cs" />
+        <Compile Include="Image\Image.cs" />
+        <Compile Include="Image\Pixel.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
