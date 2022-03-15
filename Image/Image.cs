@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -39,10 +40,10 @@ namespace PhotoShot.AdvancedConsole
         {
             using (var file = new FileStream(fileUrl, FileMode.Create))
             {
-                file.Write(BitConverter.GetBytes(Width), 0, 4);
-                file.Write(BitConverter.GetBytes(Height), 0, 4);
-                file.Write(BitConverter.GetBytes(_nbrBitPerColor), 0, 4);
-                file.Write(BitConverter.GetBytes(_offset), 0, 4);
+                file.Write(IntToEndian(Width), 0, 4);
+                file.Write(IntToEndian(Height), 0, 4);
+                file.Write(IntToEndian(_nbrBitPerColor), 0, 4);
+                file.Write(IntToEndian(_offset), 0, 4);
                 //write string to file
                 var typeBytes = Encoding.ASCII.GetBytes(_type);
                 file.Write(BitConverter.GetBytes((int)typeBytes.Length), 0, 4);
@@ -69,23 +70,22 @@ namespace PhotoShot.AdvancedConsole
                     using (BinaryReader br = new BinaryReader(fs))
                     {
                         _type = Encoding.ASCII.GetString(br.ReadBytes(2));
-                        _fileSize = br.ReadInt32();
+                        _fileSize = EndianToInt(br.ReadBytes(4));
                         br.ReadBytes(4);
-                        _offset = br.ReadInt32();
-
+                        _offset = EndianToInt(br.ReadBytes(4));
                         br.ReadBytes(4);
-                        int width = br.ReadInt32();
-                        int height = br.ReadInt32();
+                        int width = EndianToInt(br.ReadBytes(4));
+                        int height = EndianToInt(br.ReadBytes(4));
                         _pixels = new Pixel[height, width];
                         br.ReadBytes(2);
-                        _nbrBitPerColor = br.ReadInt16();
+                        _nbrBitPerColor = EndianToInt(br.ReadBytes(2));
                         //br.ReadBytes(24);
                         
                         /*for (int i = 0; i < height; i++)
                         {
                             for (int j = 0; j < width; j++)
                             {
-                                _pixels[i, j] = new Pixel(br.ReadByte(), br.ReadByte(), br.ReadByte());
+                                _pixels[i, j] = new Pixel(EndianToInt(br.ReadBytes(1));, EndianToInt(br.ReadBytes(1)),EndianToInt(br.ReadBytes(1)););
                                 //br.ReadBytes(_nbrBitPerColor-3);
                             }
                         }*/
@@ -96,14 +96,30 @@ namespace PhotoShot.AdvancedConsole
             }
         }
 
-        public int EndianToInt(byte[] bytes)
+        public static int EndianToInt(byte[] bytes)
         {
-            return BitConverter.ToInt32(bytes, 0);
+            var value = 0;
+            for (int i = 0, j = 1; i < bytes.Length; i++, j *=256)
+            {
+                value += bytes[i] * j;
+            }
+            return value;
         }
         
-        public byte[] IntToEndian(int value)
+        public static byte[] IntToEndian(int value)
         {
-            return BitConverter.GetBytes(value);
+            var resultList = new List<Byte>();
+            int j = 0;
+            do
+            {
+                
+            } while (value<= 0);
+            var result = new byte[resultList.Count];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = resultList[i];
+            }
+            return result;
         }
         
         //tostring

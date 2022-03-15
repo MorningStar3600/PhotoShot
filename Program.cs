@@ -10,6 +10,7 @@ namespace PhotoShot
     {
         public static void Main(string[] args)
         {
+            
             ConsoleManager.SetFullScreen();
             BitmapImage v = new BitmapImage("coco","jjj");
 
