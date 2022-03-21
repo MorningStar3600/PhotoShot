@@ -18,9 +18,13 @@ namespace PhotoShot
 
             Image img = new Image("../../Images/images/coco.bmp");
             
-            img.Save("../../Images/test001u.bmp");
+            var x = img.ResizeDown(1,2);
+            x.Save("../../Images/images/1234.bmp");
+            //img.BlackAndWhiteBurger();
             
-            img.Draw();
+            //img.Save("../../Images/images/1234.bmp");
+            
+            //img.Draw();
             
             Console.ReadKey();
         }

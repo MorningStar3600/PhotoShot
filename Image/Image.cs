@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
 using System.Threading;
-using PhotoShot.AdvancedConsole;
+
 namespace PhotoShot.AdvancedConsole
 {
     public class Image
@@ -29,6 +26,21 @@ namespace PhotoShot.AdvancedConsole
         public int Height
         {
             get => _pixels.GetLength(0);
+        }
+        
+        public Pixel[,] Pixel
+        {
+            get => _pixels;
+            set => _pixels = value;
+        }
+
+        public Image()
+        {
+            _type = "";
+            _fileSize = 0;
+            _offset = 0;
+            _nbrBitPerColor = 0;
+            _pixels = new Pixel[0,0];
         }
 
         public Image(string fileUrl)
@@ -57,8 +69,9 @@ namespace PhotoShot.AdvancedConsole
                 writer.Write(new byte[2]);
                 writer.Write(IntToEndian(_nbrBitPerColor, 2));
                 writer.Write(new byte[8]);
-                writer.Write(IntToEndian(_resolutionX, 4));
-                writer.Write(IntToEndian(_resolutionY, 4));
+                writer.Write(new byte[8]);
+                //writer.Write(IntToEndian(_resolutionX, 4));
+                //writer.Write(IntToEndian(_resolutionY, 4));
                 writer.Write(new byte[_offset-38]);
                 for (int i = 0; i < Height; i++)
                 {
@@ -91,8 +104,9 @@ namespace PhotoShot.AdvancedConsole
                         br.ReadBytes(2);
                         _nbrBitPerColor = EndianToInt(br.ReadBytes(2));
                         br.ReadBytes(8);
-                        _resolutionX = EndianToInt(br.ReadBytes(4));
-                        _resolutionY = EndianToInt(br.ReadBytes(4));
+                        br.ReadBytes(8);
+                        //_resolutionX = EndianToInt(br.ReadBytes(4));
+                        //_resolutionY = EndianToInt(br.ReadBytes(4));
                         br.ReadBytes(_offset-38);
                         
                         for (int i = 0; i < height; i++)
@@ -131,6 +145,78 @@ namespace PhotoShot.AdvancedConsole
             }
             return bytes;
         }
+
+        public void BlackAndWhiteBurger()
+        {
+            for (int i = 0; i < Pixel.GetLength(0); i++)
+            {
+                for (int j = 0; j < Pixel.GetLength(1); j++)
+                {
+                    var color = (Pixel[i, j].G + Pixel[i, j].B + Pixel[i, j].R) / 3;
+                    Pixel[i, j].G = color;
+                    Pixel[i, j].B = color;
+                    Pixel[i, j].R = color;
+                }
+            }
+        }
+
+        public void Mirror()
+        {
+            var x = (Pixel[,]) _pixels.Clone();
+            for (int i = 0; i < Pixel.GetLength(0); i++)
+            {
+                for (int j = 0; j < Pixel.GetLength(1); j++)
+                {
+                    var y = x[Pixel.GetLength(0) - i - 1,j];
+                    Pixel[i, j] = y;
+                }
+            }
+        }
+
+        public Image ResizeDown(float top, float bottom)
+        {
+            var x = new Image();
+            x._offset = _offset;
+            x._sizeheader = _sizeheader;
+            x._type = _type; 
+            x._fileSize = _fileSize;
+            x._nbrBitPerColor = _nbrBitPerColor;
+            if (top == 0 || bottom == 0) { return x; }
+            var a = Convert.ToInt32(Pixel.GetLength(0) * (top / bottom));
+            var b = Convert.ToInt32(Pixel.GetLength(1) * (top / bottom));
+            x.Pixel = new Pixel[a,b];
+            for (int i = 0; i < x.Pixel.GetLength(0); i++)
+            {
+                for (int j = 0; j < x.Pixel.GetLength(1); j++)
+                {
+                    x.Pixel[i, j] = new Pixel(0,0,0);
+                }
+            }
+            Console.Write(x);
+            for (int i = 0; i < x.Pixel.GetLength(0); i++)
+            {
+                for (int j = 0; j < x.Pixel.GetLength(1); j++)
+                {
+                    x.Pixel[i, j].R = (Pixel[i, j].R+Pixel[i+1,j+1].R)/3;
+                    x.Pixel[i, j].G = (Pixel[i, j].G+Pixel[i+1,j+1].G)/3;
+                    x.Pixel[i, j].B = (Pixel[i, j].B+Pixel[i+1,j+1].B)/3;
+                }
+            }
+
+            return x;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         //tostring
         public override string ToString()
@@ -147,7 +233,11 @@ namespace PhotoShot.AdvancedConsole
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    sb.Append(_pixels[i, j].ToString());
+                    if (_pixels[i, j] != null)
+                    {
+                        sb.Append(_pixels[i, j].ToString());
+                    }
+                    
                 }
                 sb.AppendLine();
             }
