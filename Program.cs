@@ -18,7 +18,9 @@ namespace PhotoShot
 
             Image img = new Image("../../Images/images/coco.bmp");
             
-            Console.Write(img);
+            img.Save("../../Images/test001u.bmp");
+            
+            img.Draw();
             
             Console.ReadKey();
         }
