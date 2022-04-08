@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Security;
 using System.Text;
 using System.Threading;
 
@@ -69,7 +70,6 @@ namespace PhotoShot.AdvancedConsole
                 writer.Write(new byte[2]);
                 writer.Write(IntToEndian(_nbrBitPerColor, 2));
                 writer.Write(new byte[8]);
-                writer.Write(new byte[8]);
                 //writer.Write(IntToEndian(_resolutionX, 4));
                 //writer.Write(IntToEndian(_resolutionY, 4));
                 writer.Write(new byte[_offset-38]);
@@ -103,7 +103,6 @@ namespace PhotoShot.AdvancedConsole
                         _pixels = new Pixel[height, width];
                         br.ReadBytes(2);
                         _nbrBitPerColor = EndianToInt(br.ReadBytes(2));
-                        br.ReadBytes(8);
                         br.ReadBytes(8);
                         //_resolutionX = EndianToInt(br.ReadBytes(4));
                         //_resolutionY = EndianToInt(br.ReadBytes(4));
@@ -173,49 +172,22 @@ namespace PhotoShot.AdvancedConsole
             }
         }
 
-        public Image ResizeDown(float top, float bottom)
+        public void Resize(double ratio)
         {
-            var x = new Image();
-            x._offset = _offset;
-            x._sizeheader = _sizeheader;
-            x._type = _type; 
-            x._fileSize = _fileSize;
-            x._nbrBitPerColor = _nbrBitPerColor;
-            if (top == 0 || bottom == 0) { return x; }
-            var a = Convert.ToInt32(Pixel.GetLength(0) * (top / bottom));
-            var b = Convert.ToInt32(Pixel.GetLength(1) * (top / bottom));
-            x.Pixel = new Pixel[a,b];
-            for (int i = 0; i < x.Pixel.GetLength(0); i++)
+            Pixel[,] newPixels = new Pixel[(int)(Pixel.GetLength(0) * ratio), (int)(Pixel.GetLength(1) * ratio)];
+            
+            for (int i = 0; i < newPixels.GetLength(0); i++)
             {
-                for (int j = 0; j < x.Pixel.GetLength(1); j++)
+                for (int j = 0; j < newPixels.GetLength(1); j++)
                 {
-                    x.Pixel[i, j] = new Pixel(0,0,0);
+                    var x = (int)(i / ratio);
+                    var y = (int)(j / ratio);
+                    newPixels[i, j] = Pixel[x, y];
                 }
             }
-            Console.Write(x);
-            for (int i = 0; i < x.Pixel.GetLength(0); i++)
-            {
-                for (int j = 0; j < x.Pixel.GetLength(1); j++)
-                {
-                    x.Pixel[i, j].R = (Pixel[i, j].R+Pixel[i+1,j+1].R)/3;
-                    x.Pixel[i, j].G = (Pixel[i, j].G+Pixel[i+1,j+1].G)/3;
-                    x.Pixel[i, j].B = (Pixel[i, j].B+Pixel[i+1,j+1].B)/3;
-                }
-            }
-
-            return x;
+            
+            _pixels = newPixels;
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         //tostring
@@ -260,31 +232,116 @@ namespace PhotoShot.AdvancedConsole
             }
         }*/
 
-        public void Draw()
+        public ConsoleColor[] GetClosestColor(Pixel pixel)
         {
-            int y = 0;
-            for (int i = 0; i < _pixels.GetLength(0); i++)
-            {
-                for (int j = 0; j < _pixels.GetLength(1); j++)
-                {
-                    ColorHandler.SetColor(ConsoleColor.Black, (uint)_pixels[i, j].R, (uint)_pixels[i, j].G,
-                        (uint)_pixels[i, j].B);
-                    Console.Write(' ');
-                    Thread.Sleep(10);
-                }
+            ConsoleColor[] colors = new ConsoleColor[2];
 
-                y++;
-                Console.SetCursorPosition(0, y);
+            int minDistance = int.MaxValue;
+            int secondMinDistance = int.MaxValue;
+            
+            for (int i = 0; i < 16; i++)
+            {
+                ConsoleColor color = (ConsoleColor)i;
+                Color c = Color.FromName(color.ToString());
+                
+                int distance = Math.Abs(pixel.R - c.R) + Math.Abs(pixel.G - c.G) + Math.Abs(pixel.B - c.B);
+                if (distance < minDistance)
+                {
+                    secondMinDistance = minDistance;
+                    minDistance = distance;
+                    colors[1] = colors[0];
+                    colors[0] = color;
+                }
+                else if (distance < secondMinDistance)
+                {
+                    secondMinDistance = distance;
+                    colors[1] = color;
+                }
             }
             
-            ColorHandler.SetColor(ConsoleColor.Black, 0,0,0);
+            return colors;
+        }
+        public void Draw()
+        {
+            int newWidth = _pixels.GetLength(1);
+            int newHeight = _pixels.GetLength(0)/2;
+
+            double ratio = 1;
+            
+            if (_pixels.GetLength(0)> Console.WindowHeight|| _pixels.GetLength(1) > Console.WindowWidth)
+            {
+                double widthRatio = (double)_pixels.GetLength(1) / Console.WindowWidth;
+                double heightRatio = (double)_pixels.GetLength(0) / (Console.WindowHeight);
+                ratio = Math.Max(widthRatio, heightRatio);
+                newWidth = (int)(_pixels.GetLength(1) / ratio);
+                newHeight = (int)(_pixels.GetLength(0) / ratio);
+            }
+            
+
+
+            for (int i = newHeight-1; i >=0 ; i--)
+            {
+                for (int j = 0; j < newWidth; j++)
+                {
+                    
+                    ConsoleColor[] colors = GetClosestColor(_pixels[(int)(i*ratio), (int)(j*ratio)]);
+                    Console.ForegroundColor = colors[1];
+                    Console.BackgroundColor = colors[0];
+                    Console.Write("O"); 
+                    
+                    
+                    
+                } 
+                Console.WriteLine();
+            }
 
             Console.ReadKey();
+        }
+        
+        //Apply convolution matrix of size n to image
+        public void ApplyConvolution(int[,] matrix)
+        {
+            if (matrix.GetLength(0) == matrix.GetLength(1))
+            {
+                Pixel[,] newPixels = new Pixel[Height, Width];
+                int lostPixels = matrix.GetLength(0)/2;
+                for (int i = lostPixels; i < _pixels.GetLength(0) - lostPixels; i++)
+                {
+                    for (int j = lostPixels; j < _pixels.GetLength(1) - lostPixels; j++)
+                    {
+                        int sumR = 0;
+                        int sumG = 0;
+                        int sumB = 0;
+                        for (int k = 0; k < matrix.GetLength(0); k++)
+                        {
+                            for (int l = 0; l < matrix.GetLength(1); l++)
+                            {
+                                sumR += _pixels[i - lostPixels + k, j - lostPixels + l].R * matrix[k, l];
+                                sumG += _pixels[i - lostPixels + k, j - lostPixels + l].G * matrix[k, l];
+                                sumB += _pixels[i - lostPixels + k, j - lostPixels + l].B * matrix[k, l];
+                            }
+                        }
+                        newPixels[i, j] = new Pixel(sumR / matrix.Length, sumB / matrix.Length, sumG / matrix.Length);
+                    }
+                }
+                
+                for (int i = 0; i < Height; i++)
+                {
+                    for (int j = 0; j < Width; j++)
+                    {
 
-
-            ColorHandler.SetColor(ConsoleColor.Black, Color.Black);
+                        if (i < lostPixels || j < lostPixels || i >= Height - lostPixels || j >= Width - lostPixels)
+                        {
+                            newPixels[i, j] = new Pixel(0, 0, 0);
+                        }
+                    }
+                }
+                _pixels = newPixels;
+            }
             
         }
+        
+        
         
         
     }

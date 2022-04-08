@@ -83,7 +83,7 @@ namespace PhotoShot.AdvancedConsole
                     buf[i].Char.UnicodeChar = r.Next(0,9).ToString().ToCharArray()[0];
                 }*/
 
-                bool b = WriteConsoleOutputW(h, buf,
+                WriteConsoleOutputW(h, buf,
                     new Coord() { X = (short)width, Y = (short)height },
                     new Coord() { X = (short)x, Y = (short)y },
                     ref rect);
