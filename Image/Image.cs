@@ -175,7 +175,7 @@ namespace PhotoShot.AdvancedConsole
             {
                 for (int j = 0; j < Pixel.GetLength(1); j++)
                 {
-                    var y = x[Pixel.GetLength(0) - i - 1,j];
+                    var y = x[i,Pixel.GetLength(1)-j-1];
                     Pixel[i, j] = y;
                 }
             }
