@@ -77,9 +77,9 @@ namespace PhotoShot.AdvancedConsole
                 {
                     for (int j = 0; j < Width; j++)
                     {
+                        writer.Write(IntToEndian(_pixels[i, j].B, _nbrBitPerColor/24));
                         writer.Write(IntToEndian(_pixels[i, j].R, _nbrBitPerColor/24));
                         writer.Write(IntToEndian(_pixels[i, j].G, _nbrBitPerColor/24));
-                        writer.Write(IntToEndian(_pixels[i, j].B, _nbrBitPerColor/24));
                     }
                 }
             }
@@ -341,7 +341,24 @@ namespace PhotoShot.AdvancedConsole
             
         }
         
-        
+        //Superposition of two images
+        public void Superposition(Image image)
+        {
+            Pixel[,] newPixels = new Pixel[Height, Width];
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    newPixels[i, j] = new Pixel(-
+                        (_pixels[i, j].B + image.Pixel[i, j].B)/2,
+                        (_pixels[i, j].R + image.Pixel[i, j].R) / 2,
+                        (_pixels[i, j].G + image.Pixel[i, j].G) / 2
+                        
+                        );
+                }
+            }
+            _pixels = newPixels;
+        }
         
         
     }

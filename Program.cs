@@ -11,23 +11,27 @@ namespace PhotoShot
         public static void Main(string[] args)
         {
 
-            ConsoleManager.SetCurrentFont("Consolas", 5);
-            ConsoleManager.SetFullScreen();
+            //ConsoleManager.SetCurrentFont("Consolas", 5);
+            //ConsoleManager.SetFullScreen();
 
             //test();
-            BitmapImage v = new BitmapImage("coco","jjj");
+            //BitmapImage v = new BitmapImage("coco","jjj");
 
-            v.WhiteAndBlackImage();
+            //v.WhiteAndBlackImage();
 
-            Image img = new Image("../../Images/images/coco.bmp");
+            Image img = new Image("../../Images/images/chaton.bmp");
+            Image img1 = new Image("../../Images/images/coco.bmp");
             
-            int[,] matrix = new int[,] 
+            img.Superposition(img1);
+            
+            
+            /*int[,] matrix = new int[,] 
                 {
                     {1,1,1},
                     {1,1,1},
                     {1,1,1}
                 };
-            img.ApplyConvolution(matrix);
+            img.ApplyConvolution(matrix);*/
             
             //img.Resize((double)1/10);
             //img.Save("../../Images/images/1234.bmp");
@@ -36,8 +40,9 @@ namespace PhotoShot
             //img.BlackAndWhiteBurger();
             
             img.Save("../../Images/images/12345.bmp");
+            img1.Save("../../Images/images/123456.bmp");
             
-            img.Draw();
+            //img.Draw();
             
             Console.ReadKey();
         }
