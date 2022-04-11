@@ -44,6 +44,7 @@
         <Compile Include="AdvancedConsole\ColorHandler.cs" />
         <Compile Include="AdvancedConsole\ConsoleManager.cs" />
         <Compile Include="AdvancedConsole\FastConsole.cs" />
+        <Compile Include="AI.cs" />
         <Compile Include="BitmapImage.cs" />
         <Compile Include="Image\Image.cs" />
         <Compile Include="Image\Pixel.cs" />

@@ -27,7 +27,7 @@ namespace PhotoShot
                     {1,1,1},
                     {1,1,1}
                 };
-            //img.ApplyConvolution(matrix);
+            img.ApplyConvolution(matrix);
             
             img.Rotate(-90);
             

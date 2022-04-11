@@ -38,10 +38,10 @@ namespace PhotoShot.AdvancedConsole
 
         public Image()
         {
-            _type = "";
+            _type = "BM";
             _fileSize = 0;
-            _offset = 0;
-            _nbrBitPerColor = 0;
+            _offset = 54;
+            _nbrBitPerColor = 24;
             _pixels = new Pixel[0,0];
         }
 
@@ -330,7 +330,7 @@ namespace PhotoShot.AdvancedConsole
                                 sumB += _pixels[i - lostPixels + k, j - lostPixels + l].B * matrix[k, l];
                             }
                         }
-                        newPixels[i, j] = new Pixel(sumR / matrix.Length, sumB / matrix.Length, sumG / matrix.Length);
+                        newPixels[i, j] = new Pixel(sumB / matrix.Length, sumG / matrix.Length, sumR / matrix.Length);
                     }
                 }
                 
@@ -372,7 +372,7 @@ namespace PhotoShot.AdvancedConsole
             {
                 for (int j = 0; j < newPixels.GetLength(1); j++)
                 {
-                    newPixels[i, j] = new Pixel(255, 255, 255);
+                    newPixels[i, j] = new Pixel(0, 0, 0);
                 }
             }
             
