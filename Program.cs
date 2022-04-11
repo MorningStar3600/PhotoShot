@@ -11,13 +11,13 @@ namespace PhotoShot
         public static void Main(string[] args)
         {
 
-            ConsoleManager.SetCurrentFont("Consolas", 5);
-            ConsoleManager.SetFullScreen();
+            //ConsoleManager.SetCurrentFont("Consolas", 5);
+            //ConsoleManager.SetFullScreen();
 
             //test();
-            BitmapImage v = new BitmapImage("coco","jjj");
+            //BitmapImage v = new BitmapImage("coco","jjj");
 
-            v.WhiteAndBlackImage();
+            //v.WhiteAndBlackImage();
 
             Image img = new Image("../../Images/images/coco.bmp");
             
@@ -29,9 +29,9 @@ namespace PhotoShot
                 };
             //img.ApplyConvolution(matrix);
             
-            img.Rotate(1);
+            img.Rotate(-90);
             
-            //img.Resize(10);
+            //img.Resize(2);
             
             //img.Resize((double)1/10);
             //img.Save("../../Images/images/1234.bmp");
@@ -41,9 +41,9 @@ namespace PhotoShot
             
             img.Save("../../Images/images/12345.bmp");
             
-            img.Draw();
+            //img.Draw();
             
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         public static void test()

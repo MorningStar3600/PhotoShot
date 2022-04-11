@@ -118,13 +118,13 @@ namespace PhotoShot.AdvancedConsole
                             }
                         }
                         
-                        Console.WriteLine(_fileSize);
-                        Console.WriteLine(_sizeheader);
-                        Console.WriteLine((_fileSize - _sizeheader)/3);
+                        //Console.WriteLine(_fileSize);
+                        //Console.WriteLine(_sizeheader);
+                        //Console.WriteLine((_fileSize - _sizeheader)/3);
                         
-                        Console.WriteLine(Width*Height);
+                        //Console.WriteLine(Width*Height);
 
-                        Console.ReadKey();
+                        //Console.ReadKey();
 
 
                     }
