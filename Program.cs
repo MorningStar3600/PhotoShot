@@ -27,7 +27,11 @@ namespace PhotoShot
                     {1,1,1},
                     {1,1,1}
                 };
-            img.ApplyConvolution(matrix);
+            //img.ApplyConvolution(matrix);
+            
+            img.Rotate(1);
+            
+            //img.Resize(10);
             
             //img.Resize((double)1/10);
             //img.Save("../../Images/images/1234.bmp");

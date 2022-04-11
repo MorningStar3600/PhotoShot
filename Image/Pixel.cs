@@ -27,7 +27,7 @@ namespace PhotoShot.AdvancedConsole
         }
         
         
-        public Pixel(int b, int r, int g)
+        public Pixel(int b, int g, int r)
         {
             _r = r;
             _g = g;

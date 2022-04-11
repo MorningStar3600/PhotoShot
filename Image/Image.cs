@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Security;
 using System.Text;
@@ -77,9 +78,9 @@ namespace PhotoShot.AdvancedConsole
                 {
                     for (int j = 0; j < Width; j++)
                     {
-                        writer.Write(IntToEndian(_pixels[i, j].R, _nbrBitPerColor/24));
-                        writer.Write(IntToEndian(_pixels[i, j].G, _nbrBitPerColor/24));
                         writer.Write(IntToEndian(_pixels[i, j].B, _nbrBitPerColor/24));
+                        writer.Write(IntToEndian(_pixels[i, j].G, _nbrBitPerColor/24));
+                        writer.Write(IntToEndian(_pixels[i, j].R, _nbrBitPerColor/24));
                     }
                 }
             }
@@ -116,6 +117,14 @@ namespace PhotoShot.AdvancedConsole
                                 //br.ReadBytes(_nbrBitPerColor-3);
                             }
                         }
+                        
+                        Console.WriteLine(_fileSize);
+                        Console.WriteLine(_sizeheader);
+                        Console.WriteLine((_fileSize - _sizeheader)/3);
+                        
+                        Console.WriteLine(Width*Height);
+
+                        Console.ReadKey();
 
 
                     }
@@ -287,7 +296,7 @@ namespace PhotoShot.AdvancedConsole
                     ConsoleColor[] colors = GetClosestColor(_pixels[(int)(i*ratio), (int)(j*ratio)]);
                     Console.ForegroundColor = colors[1];
                     Console.BackgroundColor = colors[0];
-                    Console.Write("O"); 
+                    Console.Write("OO"); 
                     
                     
                     
@@ -339,6 +348,51 @@ namespace PhotoShot.AdvancedConsole
                 _pixels = newPixels;
             }
             
+        }
+        
+        
+        //apply rotation of d degrees
+        public void Rotate(double d)
+        {
+            double rad = d * Math.PI / 180;
+            
+            var (c1X, c1Y) = RotatePixel(0,0,rad);
+            var (c2X, c2Y) = RotatePixel(Width-1,0,rad);
+            var (c3X, c3Y) = RotatePixel(Width-1,Height-1,rad);
+            var (c4X, c4Y) = RotatePixel(0,Height-1,rad);
+            
+            int maxX = Math.Max(Math.Max(c1X, c2X), Math.Max(c3X, c4X));
+            int maxY = Math.Max(Math.Max(c1Y, c2Y), Math.Max(c3Y, c4Y));
+            int minX = Math.Min(Math.Min(c1X, c2X), Math.Min(c3X, c4X));
+            int minY = Math.Min(Math.Min(c1Y, c2Y), Math.Min(c3Y, c4Y));
+            
+            Pixel[,] newPixels = new Pixel[maxY - minY + 1, maxX - minX + 1];
+            
+            for (int i = 0; i < newPixels.GetLength(0); i++)
+            {
+                for (int j = 0; j < newPixels.GetLength(1); j++)
+                {
+                    newPixels[i, j] = new Pixel(255, 255, 255);
+                }
+            }
+            
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    var (x,y) = RotatePixel(j,i,rad);
+                    newPixels[y - minY, x - minX] = _pixels[i, j];
+                }
+            }
+            
+            _pixels = newPixels;
+            //Resize(1);
+
+        }
+
+        private (int, int) RotatePixel(int x, int y, double d)
+        {
+            return ((int)(x*Math.Cos(d) - y * Math.Sin(d)),(int)(x * Math.Sin(d) + y * Math.Cos(d)));
         }
         
         
