@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using PhotoShot.AdvancedConsole;
 using Image = PhotoShot.AdvancedConsole.Image;
@@ -11,6 +13,19 @@ namespace PhotoShot
         public static void Main(string[] args)
         {
 
+            Menu menuImage = new Menu("Selection de l'image :");
+            menuImage.SelectImageMenu();
+            var imageSelected = menuImage.SelectedItem();
+            var myimage = new Image(menuImage.MenuItems[imageSelected - 1].Content);
+            Menu menu = new Menu("Traitement de l'images :");
+            menu.SelectFunctionMenu(myimage);
+            while (true)
+            {
+                var functionSelected = menu.SelectedItem();
+                menu.MenuItems[functionSelected - 1].Function();
+            }
+
+
             //ConsoleManager.SetCurrentFont("Consolas", 5);
             //ConsoleManager.SetFullScreen();
 
@@ -19,30 +34,30 @@ namespace PhotoShot
 
             //v.WhiteAndBlackImage();
 
-            Image img = new Image("../../Images/images/coco.bmp");
-            
-            int[,] matrix = new int[,] 
+            //Image img = new Image("../../Images/images/coco.bmp");
+
+            /*int[,] matrix = new int[,] 
                 {
                     {1,1,1},
                     {1,1,1},
                     {1,1,1}
-                };
+                };*/
             //img.ApplyConvolution(matrix);
-            
-            img.Rotate(-90);
-            
+
+            //img.Rotate(-90);
+
             //img.Resize(2);
-            
+
             //img.Resize((double)1/10);
             //img.Save("../../Images/images/1234.bmp");
-            
+
             //img.Draw();
             //img.BlackAndWhiteBurger();
-            
-            img.Save("../../Images/images/12345.bmp");
-            
+
+            //img.Save("../../Images/images/12345.bmp");
+
             //img.Draw();
-            
+
             //Console.ReadKey();
         }
 

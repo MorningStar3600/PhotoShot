@@ -181,8 +181,24 @@ namespace PhotoShot.AdvancedConsole
             }
         }
 
+        public void SelectResizeRation()
+        {
+            Console.WriteLine("Merci de saisir le ration de l'image : ");
+            var selecteImage = Double.TryParse(Console.ReadLine(), out double ratio);
+            if (!selecteImage || ratio <=0)
+            {
+                Console.WriteLine("Please select a valid item");
+                SelectResizeRation();
+            }
+            else
+            {
+                Resize(ratio);
+            }
+        }
+        
         public void Resize(double ratio)
         {
+            
             Pixel[,] newPixels = new Pixel[(int)(Pixel.GetLength(0) * ratio), (int)(Pixel.GetLength(1) * ratio)];
             
             for (int i = 0; i < newPixels.GetLength(0); i++)
@@ -350,7 +366,20 @@ namespace PhotoShot.AdvancedConsole
             
         }
         
-        
+        public void SelectRotateSize()
+        {
+            Console.WriteLine("Merci de saisir le degres de rotation de l'image : ");
+            var selecteImage = Double.TryParse(Console.ReadLine(), out double ratio);
+            if (!selecteImage || ratio <=0)
+            {
+                Console.WriteLine("Please select a valid item");
+                SelectRotateSize();
+            }
+            else
+            {
+                Rotate(ratio);
+            }
+        }
         //apply rotation of d degrees
         public void Rotate(double d)
         {
@@ -394,9 +423,78 @@ namespace PhotoShot.AdvancedConsole
         {
             return ((int)(x*Math.Cos(d) - y * Math.Sin(d)),(int)(x * Math.Sin(d) + y * Math.Cos(d)));
         }
+
+        public void Leave()
+        {
+            string name;
+            bool err;
+            do
+            {
+                err = false;
+                Console.Write("Nom de l'image : ");
+                name = Console.ReadLine();
+                if (name != null && name.Length == 0)
+                {
+                    Console.WriteLine("Veuillez entrer un nom valide");
+                    err = true;
+                }
+                foreach (var file in Directory.GetFiles("../../Images/update/", "*.bmp"))
+                {
+                    var x = file.Split('/');
+                    var y = x[x.Length-1].Split('.');
+                    if (y[0].ToLower() == name.ToLower())
+                    {
+                        Console.WriteLine("Ce nom est déjà utilisé");
+                        err = true;
+                    }
+                }
+            } while ((name == "" || err == true || name.Length <= 0));
+            name = name.ToLower();
+            Save("../../Images/update/" + name + ".bmp");
+            Environment.Exit(0);
+        }
+
+
+        public void flou()
+        {
+            ApplyConvolution(new int[,] 
+            {
+                {1,1,1},
+                {1,1,1},
+                {1,1,1}
+            });
+        }
+
+        public void Contraste()
+        {
+            ApplyConvolution(new int[,] 
+            {
+                {0,-1,0},
+                {-1,5,-1},
+                {0,-1,0}
+            });
+        }
         
         
-        
-        
+        public void DetectionContour()
+        {
+            ApplyConvolution(new int[,] 
+            {
+                {0,1,0},
+                {1,-4,1},
+                {0,1,0}
+            });
+        }
+
+        public void RenforcementBord()
+        {
+            ApplyConvolution(new int[,] 
+            {
+                {0,0,0},
+                {-1,1,0},
+                {0,0,0}
+            });
+        }
+
     }
 }

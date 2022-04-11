@@ -47,35 +47,35 @@
         <Compile Include="BitmapImage.cs" />
         <Compile Include="Image\Image.cs" />
         <Compile Include="Image\Pixel.cs" />
+        <Compile Include="Menu.cs" />
+        <Compile Include="MenuItem.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Images\coco.bmp" />
-      <Content Include="Images\images\automne.bmp" />
-      <Content Include="Images\images\cascade.bmp" />
-      <Content Include="Images\images\chaton.bmp" />
-      <Content Include="Images\images\coco.bmp" />
-      <Content Include="Images\images\hibiscus.bmp" />
-      <Content Include="Images\images\joconde.bmp" />
-      <Content Include="Images\images\lac.bmp" />
-      <Content Include="Images\images\lena.bmp" />
-      <Content Include="Images\images\mario.bmp" />
-      <Content Include="Images\images\montagne.bmp" />
-      <Content Include="Images\images\parapluies.bmp" />
-      <Content Include="Images\images\plage.bmp" />
-      <Content Include="Images\images\poisson.bmp" />
-      <Content Include="Images\images\vangogh.bmp" />
-      <Content Include="Images\images\zelda.bmp" />
-      <Content Include="Images\lac_en_montagne.bmp" />
-      <Content Include="Images\lena.bmp" />
-      <Content Include="Images\Test001.bmp" />
-      <Content Include="Images\Test002.bmp" />
-      <Content Include="Images\Test003.bmp" />
-      <Content Include="Images\Test004.bmp" />
+      <Content Include="Images\exemple\automne.bmp" />
+      <Content Include="Images\exemple\cascade.bmp" />
+      <Content Include="Images\exemple\chaton.bmp" />
+      <Content Include="Images\exemple\coco.bmp" />
+      <Content Include="Images\exemple\hibiscus.bmp" />
+      <Content Include="Images\exemple\joconde.bmp" />
+      <Content Include="Images\exemple\lac.bmp" />
+      <Content Include="Images\exemple\lac_en_montagne.bmp" />
+      <Content Include="Images\exemple\lena.bmp" />
+      <Content Include="Images\exemple\mario.bmp" />
+      <Content Include="Images\exemple\montagne.bmp" />
+      <Content Include="Images\exemple\parapluies.bmp" />
+      <Content Include="Images\exemple\plage.bmp" />
+      <Content Include="Images\exemple\poisson.bmp" />
+      <Content Include="Images\exemple\Test001.bmp" />
+      <Content Include="Images\exemple\Test002.bmp" />
+      <Content Include="Images\exemple\Test003.bmp" />
+      <Content Include="Images\exemple\Test004.bmp" />
+      <Content Include="Images\exemple\vangogh.bmp" />
+      <Content Include="Images\exemple\zelda.bmp" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Images\Edit" />
+      <Folder Include="Images\update" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
