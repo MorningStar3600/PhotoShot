@@ -337,16 +337,20 @@ namespace PhotoShot.AdvancedConsole
                         int sumR = 0;
                         int sumG = 0;
                         int sumB = 0;
+                        //int sum = 0;
                         for (int k = 0; k < matrix.GetLength(0); k++)
                         {
                             for (int l = 0; l < matrix.GetLength(1); l++)
                             {
+                                //sum+=Math.Abs(matrix[k, l]);
                                 sumR += _pixels[i - lostPixels + k, j - lostPixels + l].R * matrix[k, l];
                                 sumG += _pixels[i - lostPixels + k, j - lostPixels + l].G * matrix[k, l];
                                 sumB += _pixels[i - lostPixels + k, j - lostPixels + l].B * matrix[k, l];
                             }
                         }
+                        //newPixels[i, j] = new Pixel(Math.Abs(sumB) / matrix.Length, Math.Abs(sumG) / matrix.Length, Math.Abs(sumR) / matrix.Length);
                         newPixels[i, j] = new Pixel(sumB / matrix.Length, sumG / matrix.Length, sumR / matrix.Length);
+                        //newPixels[i, j] = new Pixel(sumB / sum, sumG / sum, sumR / sum);
                     }
                 }
                 
@@ -359,6 +363,59 @@ namespace PhotoShot.AdvancedConsole
                         {
                             newPixels[i, j] = new Pixel(0, 0, 0);
                         }
+                    }
+                }
+                _pixels = newPixels;
+            }
+            
+        }
+        
+        
+        public void ApplyConvolutionCirculaire(int[,] matrix)
+        {
+            if (matrix != null && matrix.Length > 0 && matrix.GetLength(0)%2 != 0 && matrix.GetLength(0) == matrix.GetLength(1))
+            {
+                Pixel[,] newPixels = new Pixel[Height, Width];
+                //int lostPixels = matrix.GetLength(0)/2;
+                for (int i = 0; i < _pixels.GetLength(0); i++)
+                {
+                    for (int j = 0; j < _pixels.GetLength(1); j++)
+                    {
+                        int sumR = 0;
+                        int sumG = 0;
+                        int sumB = 0;
+                        
+                        for (int k = 0; k < matrix.GetLength(0); k++)
+                        {
+                            for (int l = 0; l < matrix.GetLength(1); l++)
+                            {
+                                int m = i + k;
+                                int n = j + l;
+                                if (m > _pixels.GetLength(0) - 1)
+                                {
+                                    m = m - _pixels.GetLength(0);
+                                }
+                                if (n > _pixels.GetLength(1) - 1)
+                                {
+                                    n = n - _pixels.GetLength(1);
+                                }
+                                if(m < 0)
+                                {
+                                    m = _pixels.GetLength(0) + m;
+                                }
+                                if(n < 0)
+                                {
+                                    n = _pixels.GetLength(1) + n;
+                                }
+                                
+                                sumR += _pixels[m,n].R * matrix[k, l];
+                                sumG += _pixels[m,n].G * matrix[k, l];
+                                sumB += _pixels[m,n].B * matrix[k, l];
+                            }
+                        }
+                        //newPixels[i, j] = new Pixel(Math.Abs(sumB) / matrix.Length, Math.Abs(sumG) / matrix.Length, Math.Abs(sumR) / matrix.Length);
+                        newPixels[i, j] = new Pixel(sumB / matrix.Length, sumG / matrix.Length, sumR / matrix.Length);
+                        //newPixels[i, j] = new Pixel(sumB / sum, sumG / sum, sumR / sum);
                     }
                 }
                 _pixels = newPixels;
@@ -457,7 +514,7 @@ namespace PhotoShot.AdvancedConsole
 
         public void flou()
         {
-            ApplyConvolution(new int[,] 
+            ApplyConvolutionCirculaire(new int[,] 
             {
                 {1,1,1},
                 {1,1,1},
