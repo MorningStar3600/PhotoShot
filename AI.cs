@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using PhotoShot.AdvancedConsole;
+using Image = PhotoShot.AdvancedConsole.Image;
 
 namespace PhotoShot
 {
@@ -84,13 +87,13 @@ namespace PhotoShot
             return false;
         }
 
-        static void SmartImage()
+        public static void SmartImage()
         {
             Console.WriteLine("Donnez un nom a votre image");
             string name = Console.ReadLine();
             Console.WriteLine("Donnez une taille a votre image : 'largeur * hauteur'");
             string size = Console.ReadLine();
-            string[] sizes = size.Split(' ');
+            string[] sizes = size.Split(' ','*');
             int width = int.Parse(sizes[0]);
             int height = int.Parse(sizes[sizes.Length-1]);
             
@@ -103,6 +106,9 @@ namespace PhotoShot
             {
                 Pixel = new Pixel[height,width]
             };
+            
+            ApplyForm(decomposition[0], img);
+            img.Save("../../updates/" + name + ".png");
         }
 
         static void ApplyForm(string[] formProperties, Image img)
@@ -113,13 +119,78 @@ namespace PhotoShot
             }
             
             string form = formProperties[0];
-            string Color = formProperties[1];
+            string color = formProperties[1];
+            string insideColor = "noir";
+            if (formProperties.Length > 2)
+            {
+                
+            }
             
-            HashSet<string >
+            Hashtable colors = new Hashtable
+            {
+                {"bleu", Color.Blue},
+                {"rouge", Color.Red},
+                {"vert", Color.Green},
+                {"jaune", Color.Yellow},
+                {"noir", Color.Black},
+                {"blanc", Color.White},
+                {"gris", Color.Gray}
+            };
 
             if (form == "square")
             {
-                
+                for (int i =  0; i < img.Pixel.GetLength(0); i++)
+                {
+                    for (int j = 0; j < img.Pixel.GetLength(1); j++)
+                    {
+                        if (i == 0 || i == img.Pixel.GetLength(0) - 1 || j == 0 || j == img.Pixel.GetLength(1) - 1)
+                        {
+                            img.Pixel[i, j] = new Pixel(255,0,0);;
+                        }
+                        else
+                        {
+                            img.Pixel[i, j] = new Pixel(((Color)colors[insideColor]).B, ((Color)colors[insideColor]).G, ((Color)colors[insideColor]).R);;
+                        }
+                    }
+                }
+            } else if (form == "circle")
+            {
+                int radius = img.Pixel.GetLength(0) / 2;
+                int x = radius;
+                int y = radius;
+                int x2 = 0;
+                int y2 = 0;
+                for (int i = 0; i < img.Pixel.GetLength(0) - 1; i++)
+                {
+                    for (int j = 0; j < img.Pixel.GetLength(1) - 1; j++)
+                    {
+                        x2 = i - radius;
+                        y2 = j - radius;
+                        if (x2 * x2 + y2 * y2 <= radius * radius)
+                        {
+                            img.Pixel[i, j] = new Pixel(((Color)colors[color]).B, ((Color)colors[color]).G, ((Color)colors[color]).R);;
+                        }
+                    }
+                }
+            } else if (form == "triangle")
+            {
+                int radius = img.Pixel.GetLength(0) / 2;
+                int x = radius;
+                int y = radius;
+                int x2 = 0;
+                int y2 = 0;
+                for (int i = 0; i < img.Pixel.GetLength(0) - 1; i++)
+                {
+                    for (int j = 0; j < img.Pixel.GetLength(1) - 1; j++)
+                    {
+                        x2 = i - radius;
+                        y2 = j - radius;
+                        if (x2 * x2 + y2 * y2 <= radius * radius)
+                        {
+                            img.Pixel[i, j] = new Pixel(((Color)colors[color]).B, ((Color)colors[color]).G, ((Color)colors[color]).R);;
+                        }
+                    }
+                }
             }
         }
     }

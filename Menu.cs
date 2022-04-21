@@ -48,6 +48,7 @@ namespace PhotoShot
                 Console.WriteLine("Please select a valid item");
                 return SelectedItem();
             }
+            Console.WriteLine("Réussi");
             return itemSelected;
         }
 
@@ -61,6 +62,7 @@ namespace PhotoShot
             AddMenuItem(new MenuItem("Contraste","Contraste",image.Contraste));
             AddMenuItem(new MenuItem("Detection Contour","DetectionContour",image.DetectionContour));
             AddMenuItem(new MenuItem("Renforcement des bords","Renforcement des bords",image.RenforcementBord));
+            AddMenuItem(new MenuItem("Smart Image","SmartImage",AI.SmartImage));
             AddMenuItem(new MenuItem("Quitté le program","Leave",image.Leave));
         }
 
