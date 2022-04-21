@@ -35,13 +35,38 @@ namespace PhotoShot.AdvancedConsole
             get => _pixels;
             set => _pixels = value;
         }
+        
+        public int Offset
+        {
+            get => _offset;
+            set => _offset = value;
+        }
+        
+        public int FileSize
+        {
+            get => _fileSize;
+            set => _fileSize = value;
+        }
+        
+        public int NbrBitPerColor
+        {
+            get => _nbrBitPerColor;
+            set => _nbrBitPerColor = value;
+        }
+        
+        public int SizeHeader
+        {
+            get => _sizeheader;
+            set => _sizeheader = value;
+        }
+        
 
         public Image()
         {
             _type = "BM";
             _fileSize = 0;
             _offset = 54;
-            _nbrBitPerColor = 24;
+            _nbrBitPerColor = 8;
             _pixels = new Pixel[0,0];
         }
 
@@ -118,13 +143,13 @@ namespace PhotoShot.AdvancedConsole
                             }
                         }
                         
-                        //Console.WriteLine(_fileSize);
-                        //Console.WriteLine(_sizeheader);
-                        //Console.WriteLine((_fileSize - _sizeheader)/3);
+                        Console.WriteLine(_offset);
+                        Console.WriteLine(_nbrBitPerColor);
+                        Console.WriteLine((_fileSize - _sizeheader)/3);
                         
-                        //Console.WriteLine(Width*Height);
+                        Console.WriteLine(Width*Height);
 
-                        //Console.ReadKey();
+                        Console.ReadKey();
 
 
                     }
@@ -210,8 +235,8 @@ namespace PhotoShot.AdvancedConsole
                     newPixels[i, j] = Pixel[x, y];
                 }
             }
-            
             _pixels = newPixels;
+            FileSize = Width * Height * 24 + _offset;
         }
         
         
@@ -288,6 +313,9 @@ namespace PhotoShot.AdvancedConsole
         }
         public void Draw()
         {
+            Console.Clear();
+            int currentfont = ConsoleManager.GetFontSize();
+            ConsoleManager.SetCurrentFont("", 5);
             int newWidth = _pixels.GetLength(1);
             int newHeight = _pixels.GetLength(0)/2;
 
@@ -312,15 +340,15 @@ namespace PhotoShot.AdvancedConsole
                     ConsoleColor[] colors = GetClosestColor(_pixels[(int)(i*ratio), (int)(j*ratio)]);
                     Console.ForegroundColor = colors[1];
                     Console.BackgroundColor = colors[0];
-                    Console.Write("OO"); 
-                    
-                    
-                    
                 } 
                 Console.WriteLine();
             }
 
             Console.ReadKey();
+            Console.Clear();
+            ConsoleManager.SetCurrentFont("", (short)currentfont);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
         }
         
         //Apply convolution matrix of size n to image
@@ -472,8 +500,7 @@ namespace PhotoShot.AdvancedConsole
             }
             
             _pixels = newPixels;
-            //Resize(1);
-
+            FileSize = Width * Height * 24 + _offset;
         }
 
         private (int, int) RotatePixel(int x, int y, double d)
@@ -499,7 +526,7 @@ namespace PhotoShot.AdvancedConsole
                 {
                     var x = file.Split('/');
                     var y = x[x.Length-1].Split('.');
-                    if (y[0].ToLower() == name.ToLower())
+                    if (name != null && y[0].ToLower() == name.ToLower())
                     {
                         Console.WriteLine("Ce nom est déjà utilisé");
                         err = true;

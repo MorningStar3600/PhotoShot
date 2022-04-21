@@ -54,6 +54,10 @@ namespace PhotoShot.AdvancedConsole
         public string FontName;
     }
 
+    public static int GetFontSize()
+    {
+        return Marshal.SizeOf<FontInfo>();
+    }
     public static FontInfo[] SetCurrentFont(string font, short fontSize = 0)
     {
         FontInfo before = new FontInfo

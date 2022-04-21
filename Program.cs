@@ -16,7 +16,13 @@ namespace PhotoShot
             Menu menuImage = new Menu("Selection de l'image :");
             menuImage.SelectImageMenu();
             var imageSelected = menuImage.SelectedItem();
-            var myimage = new Image(menuImage.MenuItems[imageSelected - 1].Content);
+            Image myimage;
+            if (imageSelected == menuImage.MenuItems.Count)
+            {
+                
+                myimage = AI.SmartImage();
+            }    
+            else myimage= new Image(menuImage.MenuItems[imageSelected - 1].Content);
             Menu menu = new Menu("Traitement de l'images :");
             menu.SelectFunctionMenu(myimage);
             while (true)
